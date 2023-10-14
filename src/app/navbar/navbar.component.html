@@ -1,8 +1,42 @@
-<div class="px-10 flex row justify-evenly rounded-b-lg shadow-2xl bg-gradient-to-b from-[#0077B6] to-[#03045E]">
+<div class="px-10 flex justify-between items-center md:justify-evenly flex-row rounded-b-lg shadow-2xl bg-gradient-to-b from-[#0077B6] to-[#03045E]">
 <div class="p-4 bg-white">
-  <img class="max-h-20" src={{logoSource}}/>
+  <img class="h-20 w-20" src={{logoSource}}/>
 </div>
-<ul class="flex row justify-around">
-  <li class="text-xl text-white text-bold px-10 py-10" *ngFor="let options of navOptions">{{options}}</li>
+<div class="-mr-2 -my-2 md:hidden">
+  <button type="button" (click)="toggleMenu()"
+    class="rounded-md p-2 inline-flex items-center justify-center text-white hover:bg-[#0077B6]">
+    <svg class="h-10 w-10" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 6h16M4 12h16M4 18h16" />
+    </svg>
+  </button>
+</div>
+<div class="absolute z-30 top-28 inset-x-0 transition ease-in-out md:hidden" *ngIf="menuOpen">
+  <div class="rounded-lg min-h-5/6 shadow-lg ring-1 ring-black ring-opacity-5 bg-white divide-y-2 divide-gray-50">
+    <div class="flex items-center justify-between">
+      <button (click)="toggleMenu()" type="button"
+        class="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+        <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+          aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <div class="py-4 px-5 flex flex-col justify-center items-center">
+      <div class="grid gap-4">
+        <a *ngFor="let options of navOptions.slice(0,3)" class="text-center text-lg font-bold text-black hover:opacity-60">
+          <div *ngIf="navOptions.indexOf(options) === 0;else otherOpt" >
+            {{options}}
+          </div>
+          <ng-template #otherOpt class="pt-4">
+            {{options}}
+          </ng-template>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<ul class="hidden md:visible md:flex flex-row justify-center sm:justify-around">
+  <li class="text-lg text-center px-4 lg:text-xl lg:px-10 text-white text-bold  py-10" *ngFor="let options of navOptions">{{options}}</li>
 </ul>
 </div>
+
