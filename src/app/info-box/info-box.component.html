@@ -1,0 +1,11 @@
+<div class="p-14">
+  <img src={{imgUrl}} class="object-cover h-72 w-96 rounded-xl hover:shadow-2xl" alt="descriptor image">
+  <div class="pl-2">
+    <h1 class="text-xl text-center font-bold py-4">
+      {{descriptor}}
+    </h1>
+    <ul class="list-disc pl-6">
+      <li *ngFor="let item of items">{{item}}</li>
+    </ul>
+  </div>
+</div>
