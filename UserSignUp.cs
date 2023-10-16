@@ -16,6 +16,7 @@ namespace WebApplication {
 
   protected void Page_Load(object sender, EventArgs e) {
   }
+  
   // sign up button click event
   protected void SignUpBtn_Click(object sender, EventArgs e) {
    if (checkMemberExists()) {
@@ -47,6 +48,7 @@ namespace WebApplication {
     return false;
    }
   }
+
   void signUpNewMember() {
    //Response.Write("<script>alert('Testing');</script>");
    try {
@@ -59,7 +61,7 @@ namespace WebApplication {
     cmd.Parameters.AddWithValue("@Password", TextBox2.Text.Trim());
     cmd.Parameters.AddWithValue("@Email", TextBox3.Text.Trim());
     cmd.Parameters.AddWithValue("@Firstname", TextBox4.Text.Trim());
-    cmd.Parameters.AddWithValue("@Lastname", DropDownList1.SelectedItem.Value);
+    cmd.Parameters.AddWithValue("@Lastname", TextBox5.Text.Trim());
     cmd.Parameters.AddWithValue("@Phone", TextBox6.Text.Trim());
     cmd.Parameters.AddWithValue("@Address", TextBox7.Text.Trim());
     cmd.Parameters.AddWithValue("@RoleID", 2);
