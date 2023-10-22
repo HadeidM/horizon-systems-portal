@@ -1,5 +1,6 @@
-import { Component, Input, ElementRef, HostListener } from '@angular/core';
+import { Component, Input, ElementRef, HostListener,Injectable } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -35,14 +36,20 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 
 export class NavbarComponent {
   logoSource = '../../../assets/HSlogo.jpg'
-  navOptions = ['Make A Payment','Report A Claim', 'Customer Care', 'Welcome User!']
+  loggedIn = false
+  logStr : string|null;
   menuOpen : boolean;
   innerWidth : number;
-  constructor() {
+  
+  constructor(private router:Router) {
     this.menuOpen = false
     this.innerWidth = window.innerWidth;
+    this.logStr = localStorage.getItem("logStr");
   }
-
+  ngOnChanges(){
+    this.logStr = localStorage.getItem("logStr");
+  }
+  navOptions = ['Make A Payment','Report A Claim', 'Customer Care']
   // Add a listener to register window resize events
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -62,6 +69,10 @@ export class NavbarComponent {
   // toggles MenuOpen
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
+  }
+
+  navigateToLogin(){
+    this.router.navigate(['/login']);
   }
   
 }

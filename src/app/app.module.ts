@@ -6,20 +6,28 @@ import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { InfoBoxComponent } from './info-box/info-box.component';
 import { FooterComponent } from './footer/footer.component';
+import { HomeComponent } from './home/home.component';
+import { LoginComponent } from './login/login.component';
+import { MultiFactorAuthComponent } from './multi-factor-auth/multi-factor-auth.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     InfoBoxComponent,
-    FooterComponent
+    FooterComponent,
+    HomeComponent,
+    LoginComponent,
+    MultiFactorAuthComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    FormsModule,
   ],
-  providers: [],
+  providers: [NavbarComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
