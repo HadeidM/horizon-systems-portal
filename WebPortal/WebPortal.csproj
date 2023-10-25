@@ -11,12 +11,16 @@
     <None Remove="Models\" />
     <None Remove="Helpers\" />
     <None Remove="Controllers\" />
+    <None Remove="UtilityService\" />
+    <None Remove="Models\Dto\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Context\" />
     <Folder Include="Models\" />
     <Folder Include="Helpers\" />
     <Folder Include="Controllers\" />
+    <Folder Include="UtilityService\" />
+    <Folder Include="Models\Dto\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.12" />
@@ -26,5 +30,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="NETCore.MailKit" Version="2.1.0" />
   </ItemGroup>
 </Project>

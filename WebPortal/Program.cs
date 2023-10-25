@@ -1,5 +1,6 @@
 ﻿using WebPortal.Context;
 using Microsoft.EntityFrameworkCore;
+using WebPortal.UtilityService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,7 @@ builder.Services.AddDbContext<AppDbContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnStr"));
 });
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 var app = builder.Build();
 

@@ -86,3 +86,7 @@
 /Users/zhiruiguo/UW-Madison/23fall/CS639/639/WebPortal/WebPortal/obj/Debug/net6.0/WebPortal.pdb
 /Users/zhiruiguo/UW-Madison/23fall/CS639/639/WebPortal/WebPortal/obj/Debug/net6.0/WebPortal.genruntimeconfig.cache
 /Users/zhiruiguo/UW-Madison/23fall/CS639/639/WebPortal/WebPortal/obj/Debug/net6.0/ref/WebPortal.dll
+/Users/zhiruiguo/UW-Madison/23fall/CS639/639/WebPortal/WebPortal/bin/Debug/net6.0/MailKit.dll
+/Users/zhiruiguo/UW-Madison/23fall/CS639/639/WebPortal/WebPortal/bin/Debug/net6.0/MimeKit.dll
+/Users/zhiruiguo/UW-Madison/23fall/CS639/639/WebPortal/WebPortal/bin/Debug/net6.0/NETCore.MailKit.dll
+/Users/zhiruiguo/UW-Madison/23fall/CS639/639/WebPortal/WebPortal/bin/Debug/net6.0/BouncyCastle.Crypto.dll
