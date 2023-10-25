@@ -1,0 +1,8 @@
+<div class="login-container">
+  <h2 class="text-lg font-bold">Multi-Factor Authentication Required</h2>
+  <p class="text-md">Enter the code from your Code Generator or 3rd party app below:</p>
+  <div class="form-group">
+    <input type="text" id="code" name="code" [(ngModel)]="usrCode" required placeholder="Enter Code">
+  </div>
+  <button (click)="navHome()" class="login-button">Continue</button>
+</div>
