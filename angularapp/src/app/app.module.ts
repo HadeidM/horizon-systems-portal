@@ -12,6 +12,7 @@ import { LoginComponent } from './login/login.component';
 import { MultiFactorAuthComponent } from './multi-factor-auth/multi-factor-auth.component';
 import { FormsModule } from '@angular/forms';
 import { WeatherComponent } from './weather/weather.component';
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { WeatherComponent } from './weather/weather.component';
     HomeComponent,
     LoginComponent,
     MultiFactorAuthComponent,
-    WeatherComponent
+    WeatherComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
