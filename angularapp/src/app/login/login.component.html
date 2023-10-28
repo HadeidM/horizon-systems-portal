@@ -1,14 +1,17 @@
 <div class="login-container">
   <h2>Login</h2>
-  <form (ngSubmit)="onSubmit()">
+  <form [formGroup]='loginForm'>
     <div class="form-group">
-      <input type="text" id="username" name="username" [(ngModel)]="username" required placeholder="Username">
+      <input type="text" id="username" formControlName="username"  required placeholder="Username">
+      <span class="text-red-500" *ngIf="loginForm.hasError('required', 'username') && loginForm.controls['username'].dirty">*Username is required</span>
     </div>
     <div class="form-group">
-      <input type="password" id="password" name="password" [(ngModel)]="password" required placeholder="Password">
+      <input type="password" id="password" formControlName="password" required placeholder="Password">
+      <span class="text-red-500" *ngIf="loginForm.hasError('required', 'password') && loginForm.controls['password'].dirty">*Password is required</span>
+      <span class="text-red-500" *ngIf="errorLogin">Invalid Username or Password</span>
     </div>
     <br/>
-    <button type="submit" class="login-button" >LOG IN</button>
+    <button type="submit" (click)="login()" class="login-button" >LOG IN</button>
     <button type="submit" class="login-button" >LOG IN WITH SSO</button>
   </form>
     <div class="bottom-links">

@@ -1,12 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
 
 
 @Component({
   selector: 'app-login',
+  
   templateUrl: './login.component.html',
 
 })
@@ -18,20 +20,22 @@ export class LoginComponent {
   multiFactorSet: boolean | undefined;
   loginResp?: LoginResp;
   private authUrl = 'https://localhost:7235/api/User/login';
+  fb = inject(FormBuilder);
+  loginForm !: FormGroup;
+  errorLogin: boolean = false;
+  @Output() userLoggedIn: EventEmitter<any> = new EventEmitter<any>();
+
   
   constructor(private router: Router, private nvComponent: NavbarComponent, private http: HttpClient) {
     this.multiFactorSet = true;
-  }
-  async onSubmit() {
-    //console.log('Username: ' + this.username);
-    //console.log('Password: ' + this.password);
-    if (this.username !== undefined && this.username !== '' && this.password !== undefined && this.password !== '') {
-      await this.login(this.username, this.password)
-      //console.log(lr.message)
-    }
+    this.loginForm = this.fb.group({
+      username: ['', Validators.compose([Validators.required])],
+      password: ['', Validators.required]
+    });
   }
 
-  login(username: string, password: string){
+
+  login(){
     let lr: LoginResp;
     const data = {  
       id: 0,
@@ -40,8 +44,8 @@ export class LoginComponent {
       address: "string",
       phone: "string",
       email: "string",
-      username: username,
-      password: password,
+      username: this.loginForm.value.username,
+      password: this.loginForm.value.password,
       role: "string" };
     const config = {
       headers: new HttpHeaders({
@@ -50,19 +54,23 @@ export class LoginComponent {
       })
     };
     this.http.post<LoginResp>(this.authUrl, JSON.stringify(data), config)
-    .subscribe((res) => {
-      console.log(res)
-      this.navigateToLogin() // navigate to home on successful login
-    }, (err) => {
-      console.log(err)
-    })
+      .subscribe({
+        next: (res) => {
+          console.log(res)
+          localStorage.setItem('logStr', `Welcome ${this.loginForm.value.username}!`)
+          this.userLoggedIn.emit({ username: this.loginForm.value.username })
+          this.router.navigate(['/home']) // navigate to home on successful login
+        }, error: (err) => {
+          this.errorLogin = true;
+          console.log(err)
+        }
+      });
     
   }
 
-  navigateToLogin() {
-    this.router.navigate(['/home'])
+  getUsername() {
+    return this.userLoggedIn;
   }
-
   navigateToSSOPage() {
     if (this.multiFactorSet) {
       this.router.navigate(['/mfa']);

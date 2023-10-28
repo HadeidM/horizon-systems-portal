@@ -70,7 +70,11 @@ export class NavbarComponent {
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
   }
-
+  logOut() {
+    console.log('logout!!!!!')
+    localStorage.setItem('logStr', 'Login')
+    location.reload();
+  }
   navigateToLogin(){
     this.router.navigate(['/login']);
   }
