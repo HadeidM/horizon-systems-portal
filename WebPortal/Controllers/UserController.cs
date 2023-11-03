@@ -12,6 +12,11 @@ using System.Security.Cryptography;
 using WebPortal.Helpers;
 using WebPortal.UtilityService;
 using WebPortal.Models.Dto;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -44,8 +49,14 @@ namespace WebPortal.Controllers
             if (user == null)
                 return NotFound(new { Message = "User not found!" });
 
+            user.Token = CreateJwt(user);
+            var newAccessToken = user.Token;
+
+            await _authContext.SaveChangesAsync();
+
             return Ok(new
             {
+                AccessToken = newAccessToken,
                 MessageProcessingHandler = "Login Successful!"
             });
         }
@@ -67,6 +78,9 @@ namespace WebPortal.Controllers
             {
                 return BadRequest(new { Message = "An account with this email address already exists." });
             }
+
+            userObj.Role = "User";
+            userObj.Token = "";
 
             await _authContext.Users.AddAsync(userObj);
             await _authContext.SaveChangesAsync();
@@ -142,6 +156,82 @@ namespace WebPortal.Controllers
                 StatusCode = 200,
                 Message = "Password Reset Successfully!"
             });
+        }
+
+        [HttpGet("profile")]
+        [Authorize]
+        public async Task<IActionResult> GetProfile()
+        {
+            // Assume that the username is the unique identifier for the user and is stored in the claim after authentication
+            var username = User.Identity.Name;
+            var user = await _authContext.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Username == username);
+
+            if (user == null)
+            {
+                return NotFound(new { Message = "User not found!" });
+            }
+
+            // Only select the details you want to expose, not the entire user object
+            var userProfile = new
+            {
+                user.Email,
+                user.Phone,
+                user.Address
+            };
+
+            return Ok(userProfile);
+        }
+
+        [HttpPut("profile")]
+        [Authorize] // Ensure only authenticated users can update their profile
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateUserProfileDto userProfileDto)
+        {
+            var username = User.Identity.Name; // should implement Authorization first
+            var user = await _authContext.Users
+                .FirstOrDefaultAsync(u => u.Username == username);
+
+            if (user == null)
+            {
+                return NotFound(new { Message = "User not found!" });
+            }
+
+            // Update the user's profile information
+            user.Email = userProfileDto.Email;
+            user.Password = userProfileDto.Password; // TODO: hash the password if storing passwords in hashed form
+            user.Phone = userProfileDto.Phone;
+            user.Address = userProfileDto.Address;
+
+            // Mark the entity as modified
+            _authContext.Entry(user).State = EntityState.Modified;
+
+            // Save changes to the database
+            await _authContext.SaveChangesAsync();
+
+            return Ok(new { Message = "Profile updated successfully!" });
+        }
+
+        private string CreateJwt(User user)
+        {
+            var jwtTokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes("veryverysceret.....");
+            var identity = new ClaimsIdentity(new Claim[]
+            {
+                new Claim(ClaimTypes.Role, user.Role),
+                new Claim(ClaimTypes.Name,$"{user.Username}")
+            });
+
+            var credentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = identity,
+                // Expires = DateTime.Now.AddSeconds(10), // TODO
+                SigningCredentials = credentials
+            };
+            var token = jwtTokenHandler.CreateToken(tokenDescriptor);
+            return jwtTokenHandler.WriteToken(token);
         }
     }
 }
