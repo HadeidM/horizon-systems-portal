@@ -5,6 +5,7 @@ import { LoginComponent } from './login/login.component';
 import { MultiFactorAuthComponent } from './multi-factor-auth/multi-factor-auth.component';
 import { WeatherComponent } from './weather/weather.component';
 import { RegisterComponent } from './register/register.component';
+import { PreferencesComponent } from './preferences/preferences.component';
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -13,6 +14,7 @@ const routes: Routes = [
   {path: '', redirectTo:"/home",pathMatch:'full'},
   { path: 'weather', component: WeatherComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'preferences', component: PreferencesComponent }
 ];
 
 @NgModule({

@@ -13,6 +13,7 @@ import { MultiFactorAuthComponent } from './multi-factor-auth/multi-factor-auth.
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { WeatherComponent } from './weather/weather.component';
 import { RegisterComponent } from './register/register.component';
+import { PreferencesComponent } from './preferences/preferences.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { RegisterComponent } from './register/register.component';
     LoginComponent,
     MultiFactorAuthComponent,
     WeatherComponent,
-    RegisterComponent
+    RegisterComponent,
+    PreferencesComponent
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,11 @@
 import { Component, Input, ElementRef, HostListener,Injectable } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { ColorService } from '../color.service';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { DOCUMENT } from '@angular/common'; 
+import { Inject }  from '@angular/core';
+
 
 @Component({
   selector: 'app-navbar',
@@ -38,18 +43,33 @@ export class NavbarComponent {
   logoSource = '../../../assets/HSlogo.jpg'
   loggedIn = false
   logStr : string|null;
-  menuOpen : boolean;
+  menuOpen: boolean;
+  customerCareMenuOpen: boolean;
   innerWidth : number;
+  subscription1!: Subscription;
+  subscription2!: Subscription;
+  subscription3!: Subscription;
+  color1!: string;
+  color2!: string;
+  cssClass!: string;
   
-  constructor(private router:Router) {
+  constructor(private router:Router, private colorService:ColorService, @Inject(DOCUMENT) document: Document) {
     this.menuOpen = false
+    this.customerCareMenuOpen = false
     this.innerWidth = window.innerWidth;
     this.logStr = localStorage.getItem("logStr");
+  }
+ 
+  getGradientStyle() {
+    return {
+      'background': `linear-gradient(to bottom, ${this.colorService.color1}, ${this.colorService.color2})`,
+    };
   }
   ngOnChanges(){
     this.logStr = localStorage.getItem("logStr");
   }
   navOptions = ['Make A Payment','Report A Claim', 'Customer Care']
+  
   // Add a listener to register window resize events
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -66,9 +86,16 @@ export class NavbarComponent {
     return this.menuOpen ? "open" : "closed";
   }
 
+  get openCloseCustomerCare() {
+    return this.customerCareMenuOpen ? "open" : "closed";
+  }
   // toggles MenuOpen
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
+  }
+
+  toggleCustomerCareMenu() {
+    this.customerCareMenuOpen = !this.customerCareMenuOpen
   }
   logOut() {
     console.log('logout!!!!!')
