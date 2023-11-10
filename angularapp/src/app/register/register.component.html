@@ -1,23 +1,23 @@
 <div class="login-container">
   <h2>Register</h2>
-  <form (ngSubmit)="onRegister()">
+  <form [formGroup]="registerForm">
     <div class="form-group">
-      <input type="text" id="firstName" name="firstName" required placeholder="First Name">
+      <input type="text" id="firstName" formControlName="firstName" required placeholder="First Name">
     </div>
     <div class="form-group">
-      <input type="text" id="lastName" name="lastName" required placeholder="Last Name">
+      <input type="text" id="lastName" formControlName="lastName" required placeholder="Last Name">
     </div>
     <div class="form-group">
-      <input type="email" id="email" name="email" required placeholder="Email">
+      <input type="email" id="email" formControlName="email" required placeholder="Email">
     </div>
     <div class="form-group">
-      <input type="text" id="username" name="username" required placeholder="Username">
+      <input type="text" id="username" formControlName="username" required placeholder="Username">
     </div>
     <div class="form-group">
-      <input type="password" id="password" name="password" required placeholder="Password">
+      <input type="password" id="password" formControlName="password" required placeholder="Password">
     </div>
     <br />
-    <button type="submit" class="login-button">REGISTER</button>
+    <button type="submit" (click)="onSubmit()" class="login-button">REGISTER</button>
   </form>
   <div class="bottom-links">
     <a routerLink="/login">Login </a> | <a href="#">Forgot Password</a>
