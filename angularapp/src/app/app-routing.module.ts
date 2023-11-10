@@ -6,6 +6,7 @@ import { MultiFactorAuthComponent } from './multi-factor-auth/multi-factor-auth.
 import { WeatherComponent } from './weather/weather.component';
 import { RegisterComponent } from './register/register.component';
 import { PreferencesComponent } from './preferences/preferences.component';
+import { RegistrationSuccessComponent } from './registration-success/registration-success.component';
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -14,7 +15,8 @@ const routes: Routes = [
   {path: '', redirectTo:"/home",pathMatch:'full'},
   { path: 'weather', component: WeatherComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'preferences', component: PreferencesComponent }
+  { path: 'preferences', component: PreferencesComponent },
+  { path: 'registration-success', component: RegistrationSuccessComponent }
 ];
 
 @NgModule({

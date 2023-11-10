@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RegisterService } from '../register.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -9,8 +10,9 @@ export class RegisterComponent {
   registerForm!: FormGroup;
   submitted = false;
   fb = inject(FormBuilder);
+  success = false;
 
-  constructor(private formBuilder: FormBuilder, private userService: RegisterService) {
+  constructor(private formBuilder: FormBuilder, private router: Router, private userService: RegisterService) {
     this.registerForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -24,19 +26,21 @@ export class RegisterComponent {
 
   onSubmit() {
     this.submitted = true;
-
-    //if (this.registerForm.invalid) {
-    //  return;
-    //}
-    console.log('hit')
     console.log(this.registerForm.value)
     this.userService.register(this.registerForm.value)
-      .subscribe(
-        data => {
-          console.log('Registration successful');
-        },
-        error => {
+      .subscribe({
+          next: (res) => {
+            console.log('Registration successful');
+            this.router.navigate(['/registration-success']);
+        }, error: (err) => {
           console.log('Registration failed');
-        });
+            console.log(err)
+          }
+        })
   }
+}
+
+
+interface RegisterResp {
+  message: string;
 }

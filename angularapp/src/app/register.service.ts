@@ -29,7 +29,7 @@ export class RegisterService {
       })
     };
    
-    return this.http.post<any>(this.registerUrl, JSON.stringify(data), config);
+    return this.http.post<RegisterResp>(this.registerUrl, JSON.stringify(data), config);
   }
 }
 
