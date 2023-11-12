@@ -18,7 +18,7 @@
       <div class="py-4 px-5 flex flex-col justify-center items-center">
         <div class="grid gap-4">
           <div class="text-center text-lg font-bold text-black hover:opacity-60">
-            <a *ngIf='this.logStr === "Login";else otherOpt' (click)="navigateToLogin()">
+            <a *ngIf='!isLoggedIn();else otherOpt' (click)="navigateToLogin()">
               Login
             </a>
             <ng-template (ckick)="logOut()" #otherOpt class="pt-4">
@@ -38,11 +38,6 @@
   <ul class="hidden md:visible md:flex flex-row justify-center sm:justify-around">
     <li class="text-lg text-center px-4 lg:text-xl hover:text-gray-400 lg:px-10 text-white text-bold  py-10">
       Make A Payment 
-      <!-- <h1>{{color1}}</h1>
-      <h1>{{color2}}</h1>
-      <h1>
-        {{cssClass}}
-      </h1> -->
     </li>
     <li class="text-lg text-center px-4 lg:text-xl hover:text-gray-400 lg:px-10 text-white text-bold  py-10">
       Report A Claim
@@ -70,12 +65,12 @@
         </div>
       </div>
     </li>
-    <li *ngIf='this.logStr === "Login";else otherOpt' (click)="navigateToLogin()" class="text-lg text-center px-4 lg:text-xl hover:text-gray-400 lg:px-10 text-white text-bold  py-10">
-      {{this.logStr}}
+    <li *ngIf='!isLoggedIn();else otherOpt' (click)="navigateToLogin()" class="text-lg text-center px-4 lg:text-xl hover:text-gray-400 lg:px-10 text-white text-bold  py-10">
+      Login
     </li>
     <ng-template #otherOpt>
       <li class="text-lg text-center px-4 lg:text-xl hover:text-gray-400 lg:px-10 text-white text-bold  py-10">
-        {{this.logStr}}
+        Hello {{this.getUsername()}}!
       </li>
       <li (click)="logOut()" class="text-lg text-center px-4 lg:text-xl hover:text-gray-400 lg:px-10 text-white text-bold  py-10">
         Logout

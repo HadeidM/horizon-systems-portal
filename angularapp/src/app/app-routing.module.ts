@@ -9,6 +9,7 @@ import { PreferencesComponent } from './preferences/preferences.component';
 import { RegistrationSuccessComponent } from './registration-success/registration-success.component';
 import { AuthGuard } from './auth.guard';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { ResetComponent } from './reset/reset.component';
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -19,7 +20,9 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'preferences', component: PreferencesComponent },
   { path: 'registration-success', component: RegistrationSuccessComponent },
-  { path: 'password-reset', component:ResetPasswordComponent}
+  { path: 'reset', component:ResetComponent},
+  { path: 'password-reset', component:ResetPasswordComponent},
+  
 ];
 
 @NgModule({

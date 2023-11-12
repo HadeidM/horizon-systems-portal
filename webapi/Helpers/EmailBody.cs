@@ -16,7 +16,7 @@ namespace webapi.Helpers
           <hr style=""border: 1px solid #ccc;"">
           <p style=""color: #555;"">You're receiving this e-mail because you requested a password reset for your account.</p>
           <p style=""color: #555;"">Please tap the button below to choose a new password.</p>
-          <a href=""http://localhost:4200/reset?email={email}&code={emailToken}"" target=""_blank"" style=""background: #007BFF; padding: 10px; border: none; color: white; border-radius: 4px; display: block; margin: 0 auto; width: 50%; text-align: center; text-decoration: none;"">Reset Password</a><br>
+          <a href=""https://localhost:4200/reset?email={email}&code={emailToken}"" target=""_blank"" style=""background: #007BFF; padding: 10px; border: none; color: white; border-radius: 4px; display: block; margin: 0 auto; width: 50%; text-align: center; text-decoration: none;"">Reset Password</a><br>
           <p style=""color: #333;"">Best,<br><br>
           Horizon Systems</p>
         </div>

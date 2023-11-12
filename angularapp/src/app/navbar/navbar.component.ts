@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { DOCUMENT } from '@angular/common'; 
 import { Inject }  from '@angular/core';
 import { LogoService } from '../logo.service';
+import { AuthService } from '../auth.service';
 
 
 @Component({
@@ -54,7 +55,7 @@ export class NavbarComponent {
   color2!: string;
   cssClass!: string;
   
-  constructor(private router:Router, private colorService:ColorService, private logoServ:LogoService, @Inject(DOCUMENT) document: Document) {
+  constructor(private router:Router, private authServ:AuthService, private colorService:ColorService, private logoServ:LogoService, @Inject(DOCUMENT) document: Document) {
     this.menuOpen = false
     this.customerCareMenuOpen = false
     this.innerWidth = window.innerWidth;
@@ -85,7 +86,12 @@ export class NavbarComponent {
   getLogoUrl(){
     return this.logoServ.logoUrl;
   }
-  
+  isLoggedIn() {
+    return this.authServ.getIsLoggedIn();
+  }
+  getUsername(){
+    return this.authServ.getUser();
+  }
   // getter function that returns whether the menu is open or not
   get openCloseTrigger() {
     return this.menuOpen ? "open" : "closed";
@@ -103,8 +109,9 @@ export class NavbarComponent {
     this.customerCareMenuOpen = !this.customerCareMenuOpen
   }
   logOut() {
-    console.log('logout!!!!!')
-    localStorage.setItem('logStr', 'Login')
+    // console.log('logout!!!!!')
+    // localStorage.setItem('logStr', 'Login')
+    this.authServ.logout();
     location.reload();
   }
   navigateToLogin(){

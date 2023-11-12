@@ -16,6 +16,7 @@ import { RegisterComponent } from './register/register.component';
 import { PreferencesComponent } from './preferences/preferences.component';
 import { RegistrationSuccessComponent } from './registration-success/registration-success.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { ResetComponent } from './reset/reset.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
     RegisterComponent,
     PreferencesComponent,
     RegistrationSuccessComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    ResetComponent
   ],
   imports: [
     BrowserModule,

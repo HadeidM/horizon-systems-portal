@@ -4,6 +4,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
+import { AuthService } from '../auth.service';
 
 
 @Component({
@@ -26,7 +27,7 @@ export class LoginComponent {
   @Output() userLoggedIn: EventEmitter<any> = new EventEmitter<any>();
 
   
-  constructor(private router: Router, private nvComponent: NavbarComponent, private http: HttpClient) {
+  constructor(private router: Router, private nvComponent: NavbarComponent, private http: HttpClient, private authServ:AuthService) {
     this.multiFactorSet = true;
     this.loginForm = this.fb.group({
       username: ['', Validators.compose([Validators.required])],
@@ -60,8 +61,7 @@ export class LoginComponent {
       .subscribe({
         next: (res) => {
           console.log(res)
-          localStorage.setItem('logStr', `Welcome ${this.loginForm.value.username}!`)
-          this.userLoggedIn.emit({ username: this.loginForm.value.username })
+          this.authServ.login(this.loginForm.value.username);
           this.router.navigate(['/home']) // navigate to home on successful login
         }, error: (err) => {
           this.errorLogin = true;
