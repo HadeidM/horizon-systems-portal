@@ -1,1 +1,3 @@
 .vs/*
+webapi/obj/
+webapi/bin/
