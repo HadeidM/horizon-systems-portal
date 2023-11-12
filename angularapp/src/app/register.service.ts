@@ -20,7 +20,10 @@ export class RegisterService {
       email: user.email,
       username: user.username,
       password: user.password,
-    role: "user"
+      role: "user",
+      "token": "string",
+      "resetPasswordToken": "string",
+      "resetPasswordExpiry": "2023-11-12T20:18:15.925Z"
     };
     const config = {
       headers: new HttpHeaders({

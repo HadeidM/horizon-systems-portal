@@ -46,7 +46,10 @@ export class LoginComponent {
       email: "string",
       username: this.loginForm.value.username,
       password: this.loginForm.value.password,
-      role: "string" };
+      role: "string",
+      "token": "string",
+      "resetPasswordToken": "string",
+      "resetPasswordExpiry": "2023-11-12T20:14:09.880Z" };
     const config = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
