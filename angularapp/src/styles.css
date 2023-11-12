@@ -52,3 +52,17 @@ color: #007bff;
 margin: 0 10px; 
 font-size: 14px;
 }
+
+.profile-container {
+  width: 500px;
+  margin: 0 auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-family: Arial, sans-serif; 
+}

@@ -17,7 +17,7 @@ export class LoginComponent {
   password: string | undefined;
   multiFactorSet: boolean | undefined;
   loginResp?: LoginResp;
-  private authUrl = 'https://localhost:7235/api/User/login';
+  private authUrl = 'http://localhost:5177/api/User/login';
   
   constructor(private router: Router, private nvComponent: NavbarComponent, private http: HttpClient) {
     this.multiFactorSet = true;
