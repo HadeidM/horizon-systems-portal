@@ -7,6 +7,8 @@ import { WeatherComponent } from './weather/weather.component';
 import { RegisterComponent } from './register/register.component';
 import { PreferencesComponent } from './preferences/preferences.component';
 import { RegistrationSuccessComponent } from './registration-success/registration-success.component';
+import { AuthGuard } from './auth.guard';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -16,7 +18,8 @@ const routes: Routes = [
   { path: 'weather', component: WeatherComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'preferences', component: PreferencesComponent },
-  { path: 'registration-success', component: RegistrationSuccessComponent }
+  { path: 'registration-success', component: RegistrationSuccessComponent },
+  { path: 'password-reset', component:ResetPasswordComponent}
 ];
 
 @NgModule({

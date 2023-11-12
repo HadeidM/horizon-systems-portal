@@ -15,6 +15,7 @@ import { WeatherComponent } from './weather/weather.component';
 import { RegisterComponent } from './register/register.component';
 import { PreferencesComponent } from './preferences/preferences.component';
 import { RegistrationSuccessComponent } from './registration-success/registration-success.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { RegistrationSuccessComponent } from './registration-success/registratio
     WeatherComponent,
     RegisterComponent,
     PreferencesComponent,
-    RegistrationSuccessComponent
+    RegistrationSuccessComponent,
+    ResetPasswordComponent
   ],
   imports: [
     BrowserModule,

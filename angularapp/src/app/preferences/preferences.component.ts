@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { ColorService } from '../color.service';
 import { Subscription } from 'rxjs';
 import { FormControl, FormGroup } from '@angular/forms';
+import { LogoService } from '../logo.service';
 
 @Component({
   selector: 'app-preferences',
@@ -20,37 +21,19 @@ export class PreferencesComponent {
   MFAEnabled:boolean = false;
   MFAOption:string = '';
   
-  constructor (private colorServ:ColorService) {}
+  constructor (private colorServ:ColorService, private logoserv:LogoService) {}
 
-  // ngOnInit() {
-  //   this.subscription1 = this.colorServ.getColor1.subscribe(color1 => this.c1val = color1);
-  //   this.subscription2 = this.colorServ.getColor2.subscribe(color2 => this.c2val = color2);
-
-  // }
+ 
   MFAOptForm = new FormGroup({
     option: new FormControl('Email'),
   });
 
-  // onColor1Selected(event: Event) {
-  //   const target = event.target as HTMLInputElement;
-  //   this.c1val = target.value;
-  //   console.log(this.c1val)
-    
-  //   console.log("color1 set!!!!")
 
-  // }
   updateColors(){
     this.colorServ.color1 = this.c1val
     this.colorServ.color2 = this.c2val
   }
-  // onColor2Selected(event: Event) {
-  //   const target = event.target as HTMLInputElement;
-  //   this.c2val = target.value
-  //   console.log(this.c2val)
-  //   this.colorServ.setColor2(this.c2val)
-  //   console.log("color2 set!!!!")
-    
-  // }
+
   toggleMFA() {
     this.MFAEnabled = !this.MFAEnabled
   }
@@ -68,6 +51,7 @@ export class PreferencesComponent {
       reader.readAsDataURL(target.files[0]); 
       reader.onload = (_event) => { 
           this.url = reader.result; 
+          this.logoserv.logoUrl = this.url as string
           console.log(this.url)
       }
       console.log(target.files)

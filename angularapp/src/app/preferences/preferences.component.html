@@ -1,40 +1,39 @@
-<div class="flex flex-col h-screen justify-between">
-  <app-navbar></app-navbar>
-  <h1 class="text-center pt-16 underline decoration-4 decoration-gray-400 underline-offset-8 text-3xl font-bold">Customer Preferences</h1>
-  <div class="flex flex-col lg:flex-row justify-center place-content-center align-middle">
-    <div class="py-10 px-20 box-border border-2 rounded-xl my-10 mx-6">
-      <h1 class="text-2xl font-bold pb-4">
-        Logo Selection
-      </h1>
-      <div>
-        <h2 class="text-xl mb-5">
-          Current Selection :
-        </h2>
-        <img class="box-border border-2 h-60 w-60 border-black rounded-xl mb-6" src={{this.url}}
-          *ngIf="this.url; else otherOpt">
-        <ng-template #otherOpt>
-          <img class="box-border border-2 h-60 w-60 border-black rounded-xl mb-6" src="../../assets/HSlogo.jpg">
-        </ng-template>
-      </div>
-      <input class="rounded-lg" type="file" [(ngModel)]="currentInput" (change)="onFileSelected($event)"
-        accept="image/png, image/jpeg" />
+<h1 class="text-center pt-16 underline decoration-4 decoration-gray-400 underline-offset-8 text-3xl font-bold">Customer
+  Preferences</h1>
+<div class="flex flex-col lg:flex-row justify-center place-content-center align-middle">
+  <div class="py-10 px-20 box-border border-2 rounded-xl my-10 mx-6">
+    <h1 class="text-2xl font-bold pb-4">
+      Logo Selection
+    </h1>
+    <div>
+      <h2 class="text-xl mb-5">
+        Current Selection :
+      </h2>
+      <img class="box-border border-2 h-60 w-60 border-black rounded-xl mb-6" src={{this.url}}
+        *ngIf="this.url; else otherOpt">
+      <ng-template #otherOpt>
+        <img class="box-border border-2 h-60 w-60 border-black rounded-xl mb-6" src="../../assets/HSlogo.jpg">
+      </ng-template>
     </div>
+    <input class="rounded-lg" type="file" [(ngModel)]="currentInput" (change)="onFileSelected($event)"
+      accept="image/png, image/jpeg" />
+  </div>
 
-    <div class="py-10 px-20 box-border border-2 rounded-xl my-10 mx-6">
-      <h1 class="text-2xl font-bold pb-4">
-        Color Scheme
-      </h1>
-      <p class="text-xl mb-5">Choose your preferred contrast of colors:</p>
-      <div>
-        <input type="color" id="color1" [(ngModel)]="c1val" value="#0077B6" />
-        <label class="pl-2 text-lg" for="color1">Color 1</label>
-      </div>
-      <div>
-        <input type="color" id="color2" [(ngModel)]="c2val" value="#03045E" />
-        <label class="pl-2 text-lg" for="color2">Color 2</label>
-      </div>
-      <button (click)="updateColors()" class="box-border rounded-lg bg-gray-500 px-2 text-white">Apply</button>
-      <!-- <h1>
+  <div class="py-10 px-20 box-border border-2 rounded-xl my-10 mx-6">
+    <h1 class="text-2xl font-bold pb-4">
+      Color Scheme
+    </h1>
+    <p class="text-xl mb-5">Choose your preferred contrast of colors:</p>
+    <div>
+      <input type="color" id="color1" [(ngModel)]="c1val" value="#0077B6" />
+      <label class="pl-2 text-lg" for="color1">Color 1</label>
+    </div>
+    <div>
+      <input type="color" id="color2" [(ngModel)]="c2val" value="#03045E" />
+      <label class="pl-2 text-lg" for="color2">Color 2</label>
+    </div>
+    <button (click)="updateColors()" class="box-border rounded-lg bg-gray-500 px-2 text-white">Apply</button>
+    <!-- <h1>
         selections
       </h1>
       <h1>
@@ -43,45 +42,43 @@
       <h1>
         {{c2val}}
       </h1> -->
-    </div>
-    <div class="py-10 px-20 box-border border-2 rounded-xl my-10 mx-6">
-      <h1 class="text-2xl font-bold pb-4">
-        MFA Options
-      </h1>
-      <div class="flex flex-row">
-        <h2 class="text-xl mb-4">
-          <span *ngIf="!MFAEnabled; else mfadisabled">
-            Enable
-          </span>
-          <ng-template #mfadisabled>
-            <span>
-              Disable
-            </span>
-          </ng-template>
-          MFA :
-        </h2>
-        <div class="ml-3">
-          <input
-            class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-primary checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-primary checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
-            type="checkbox" (click)="toggleMFA()" role="switch" id="flexSwitchCheckDefault" />
-          <label class="inline-block pl-[0.15rem] hover:cursor-pointer" for="flexSwitchCheckDefault"></label>
-        </div>
-      </div>
-      
-      <form [formGroup]="MFAOptForm" (change)="onChangeOption()" class="flex flex-col text-lg" *ngIf="MFAEnabled">
-        <legend class="pb-2">Select your preferred MFA Option:</legend>
-        <div>
-          <input type="radio" formControlName="option" value="email"> Email
-        </div>
-        <div>
-          <input type="radio" formControlName="option" value="phone"> Text Message (SMS)
-        </div>
-        <div>
-          <input type="radio" formControlName="option" value="authapp"> Authentication App
-        </div>
-      </form>
-      
-    </div>
   </div>
-  <app-footer></app-footer>
+  <div class="py-10 px-20 box-border border-2 rounded-xl my-10 mx-6">
+    <h1 class="text-2xl font-bold pb-4">
+      MFA Options
+    </h1>
+    <div class="flex flex-row">
+      <h2 class="text-xl mb-4">
+        <span *ngIf="!MFAEnabled; else mfadisabled">
+          Enable
+        </span>
+        <ng-template #mfadisabled>
+          <span>
+            Disable
+          </span>
+        </ng-template>
+        MFA :
+      </h2>
+      <div class="ml-3">
+        <input
+          class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-primary checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-primary checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+          type="checkbox" (click)="toggleMFA()" role="switch" id="flexSwitchCheckDefault" />
+        <label class="inline-block pl-[0.15rem] hover:cursor-pointer" for="flexSwitchCheckDefault"></label>
+      </div>
+    </div>
+
+    <form [formGroup]="MFAOptForm" (change)="onChangeOption()" class="flex flex-col text-lg" *ngIf="MFAEnabled">
+      <legend class="pb-2">Select your preferred MFA Option:</legend>
+      <div>
+        <input type="radio" formControlName="option" value="email"> Email
+      </div>
+      <div>
+        <input type="radio" formControlName="option" value="phone"> Text Message (SMS)
+      </div>
+      <div>
+        <input type="radio" formControlName="option" value="authapp"> Authentication App
+      </div>
+    </form>
+
+  </div>
 </div>

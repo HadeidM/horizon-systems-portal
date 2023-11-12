@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { DOCUMENT } from '@angular/common'; 
 import { Inject }  from '@angular/core';
+import { LogoService } from '../logo.service';
 
 
 @Component({
@@ -53,7 +54,7 @@ export class NavbarComponent {
   color2!: string;
   cssClass!: string;
   
-  constructor(private router:Router, private colorService:ColorService, @Inject(DOCUMENT) document: Document) {
+  constructor(private router:Router, private colorService:ColorService, private logoServ:LogoService, @Inject(DOCUMENT) document: Document) {
     this.menuOpen = false
     this.customerCareMenuOpen = false
     this.innerWidth = window.innerWidth;
@@ -79,6 +80,10 @@ export class NavbarComponent {
       // the button will be closed automatically
       this.toggleMenu()
     }
+  }
+
+  getLogoUrl(){
+    return this.logoServ.logoUrl;
   }
   
   // getter function that returns whether the menu is open or not

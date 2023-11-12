@@ -1,4 +1,8 @@
-<body>
-  <router-outlet></router-outlet>
+<body class="flex flex-col min-h-screen">
+  <app-navbar></app-navbar>
+  <div class="flex-grow">
+    <router-outlet></router-outlet>
+  </div>
+  <app-footer></app-footer>
   <script src="../../node_modules/flowbite/dist/flowbite.min.js"></script>
 </body>
