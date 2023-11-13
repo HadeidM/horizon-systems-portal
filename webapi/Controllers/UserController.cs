@@ -230,6 +230,54 @@ namespace webapi.Controllers
             var token = jwtTokenHandler.CreateToken(tokenDescriptor);
             return jwtTokenHandler.WriteToken(token);
         }
+     [HttpGet("preferences")]
+    [Authorize]
+    public async Task<IActionResult> GetPreferences()
+    {
+        var username = User.Identity.Name;
+        var user = await _authContext.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Username == username);
+
+        if (user == null)
+        {
+            return NotFound(new { Message = "User not found!" });
+        }
+
+        var preferences = new UserPreferencesDto
+        {
+            PrimaryColor = user.PrimaryColor,
+            SecondaryColor = user.SecondaryColor,
+            LogoUrl = user.LogoUrl,
+            MFAOption = user.MFAOption
+        };
+
+        return Ok(preferences);
+    }
+
+    [HttpPut("preferences")]
+    [Authorize]
+    public async Task<IActionResult> UpdatePreferences([FromBody] UserPreferencesDto preferencesDto)
+    {
+        var username = User.Identity.Name;
+        var user = await _authContext.Users
+            .FirstOrDefaultAsync(u => u.Username == username);
+
+        if (user == null)
+        {
+            return NotFound(new { Message = "User not found!" });
+        }
+
+        user.PrimaryColor = preferencesDto.PrimaryColor;
+        user.SecondaryColor = preferencesDto.SecondaryColor;
+        user.LogoUrl = preferencesDto.LogoUrl;
+        user.MFAOption = preferencesDto.MFAOption;
+
+        _authContext.Entry(user).State = EntityState.Modified;
+        await _authContext.SaveChangesAsync();
+
+        return Ok(new { Message = "Preferences updated successfully!" });
+    }
     }
 }
 
