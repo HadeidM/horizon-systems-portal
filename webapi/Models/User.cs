@@ -17,5 +17,9 @@ namespace webapi.Models
         public string Token { get; set; }
         public string ResetPasswordToken { get; set; }
         public DateTime ResetPasswordExpiry { get; set; }
+        public string PrimaryColor { get; set; }
+        public string SecondaryColor { get; set; }
+        public string LogoUrl { get; set; }
+        public string MFAOption { get; set; }
     }
 }
