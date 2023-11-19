@@ -54,12 +54,31 @@ export class NavbarComponent {
   color1!: string;
   color2!: string;
   cssClass!: string;
+  dropdownOpen = false;
+  hamdropdownOpen = false;
+
   
-  constructor(private router:Router, private authServ:AuthService, private colorService:ColorService, private logoServ:LogoService, @Inject(DOCUMENT) document: Document) {
+  constructor(private router:Router, private eRef: ElementRef, private authServ:AuthService, private colorService:ColorService, private logoServ:LogoService, @Inject(DOCUMENT) document: Document) {
     this.menuOpen = false
     this.customerCareMenuOpen = false
     this.innerWidth = window.innerWidth;
     this.logStr = localStorage.getItem("logStr");
+  }
+  
+  toggleDropdown() {
+    this.dropdownOpen = !this.dropdownOpen;
+  }
+  
+  toggleMenuIfOpen() {
+    if (this.menuOpen) {
+      this.toggleMenu();
+    }
+    if (this.customerCareMenuOpen) {
+      this.toggleCustomerCareMenu();
+    }
+    if (this.hamdropdownOpen) {
+      this.toggleHamDropdown();
+    }
   }
  
   getGradientStyle() {
@@ -71,6 +90,19 @@ export class NavbarComponent {
     this.logStr = localStorage.getItem("logStr");
   }
   navOptions = ['Make A Payment','Report A Claim', 'Customer Care']
+
+  @HostListener('document:click', ['$event'])
+  clickout(event: any) {
+    if (!this.eRef.nativeElement.contains(event.target)) {
+      this.customerCareMenuOpen = false;
+    }
+    if (!this.eRef.nativeElement.contains(event.target)) {
+      this.menuOpen = false;
+    }
+    if (!this.eRef.nativeElement.contains(event.target)) {
+      this.hamdropdownOpen = false;
+    }
+  }
   
   // Add a listener to register window resize events
   @HostListener('window:resize', ['$event'])
@@ -81,7 +113,17 @@ export class NavbarComponent {
       // the button will be closed automatically
       this.toggleMenu()
     }
+    if (this.innerWidth < 768 && this.customerCareMenuOpen) {
+      // if the user forgot to close the menu but resized their screen, 
+      // the dropdown will be closed automatically
+      this.toggleCustomerCareMenu()
+    }
   }
+  
+
+
+
+
 
   getLogoUrl(){
     return this.logoServ.logoUrl;
@@ -104,7 +146,9 @@ export class NavbarComponent {
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
   }
-
+  toggleHamDropdown() {
+    this.hamdropdownOpen = !this.hamdropdownOpen;
+  }
   toggleCustomerCareMenu() {
     this.customerCareMenuOpen = !this.customerCareMenuOpen
   }

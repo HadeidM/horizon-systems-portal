@@ -1,7 +1,7 @@
 <div id="nav" [ngStyle]="getGradientStyle()">
 <div class="px-10 flex justify-between items-center md:justify-evenly flex-row rounded-b-lg shadow-2xl">
   <div class="p-4 bg-white" id="top">
-    <a routerLink="/home">
+    <a routerLink="/home" (click)="toggleMenuIfOpen() ">
       <img class="h-20 w-20" src={{getLogoUrl()}} />
     </a>
   </div>
@@ -13,27 +13,38 @@
       </svg>
     </button>
   </div>
-  <div class="absolute z-30 top-28 inset-x-0 transition ease-in-out md:hidden" *ngIf="menuOpen">
-    <div class="rounded-lg min-h-5/6 shadow-lg ring-1 ring-black ring-opacity-5 bg-white divide-y-2 divide-gray-50">
-      <div class="py-4 px-5 flex flex-col justify-center items-center">
-        <div class="grid gap-4">
-          <div class="text-center text-lg font-bold text-black hover:opacity-60">
-            <a *ngIf='!isLoggedIn();else otherOpt' (click)="navigateToLogin()">
+  <div class="absolute top-20 right-8 w-48 bg-white border rounded shadow-lg sm:flex flex-col md:hidden z-10" *ngIf="menuOpen">
+        
+          <div class="text-center text-lg py-2 font-semibold text-black hover:bg-gray-300">
+            <a *ngIf='!isLoggedIn();else otherOpt' (click)="navigateToLogin(); toggleMenuIfOpen()">
               Login
             </a>
-            <ng-template (ckick)="logOut()" #otherOpt class="pt-4">
+            <ng-template (ckick)="logOut()" #otherOpt class="">
               Logout
             </ng-template>
           </div>
           <a *ngFor="let option of navOptions"
-             class="text-center text-lg font-bold text-black hover:opacity-60">
-            <div>
-              {{option}}
+             class="text-center text-lg font-semibold text-black">
+            <div *ngIf="option === 'Customer Care';else opt2">
+              <div class="relative py-2">
+                <button (click)="toggleHamDropdown()" class="text-center text-lg font-semibold text-black">
+                  Customer Care
+                  <span *ngIf="hamdropdownOpen" class="ml-1">&#9662;</span> <!-- Downward arrow when dropdown is open -->
+                  <span *ngIf="!hamdropdownOpen" class="ml-1">&#9656;</span> <!-- Rightward arrow when dropdown is closed -->
+                </button>
+                <div *ngIf="hamdropdownOpen" class="pr-2 w-full pl-8 bg-white rounded-lg">
+                  <a href="#" class="py-1 block text-lg hover:bg-gray-700 rounded-t-lg bg-gray-300 font-medium hover:text-white text-black">Account Settings</a>
+                  <a class="py-1 block text-lg hover:bg-gray-700 rounded-b-lg bg-gray-300 font-medium hover:text-white text-black" routerLink="/preferences" (click)="toggleHamDropdown();toggleMenuIfOpen()">User Preferences</a>
+                </div>
+              </div>
             </div>
+            <ng-template #opt2>
+              <div class="py-2  hover:bg-gray-300">
+                {{option}}
+              </div>
+            </ng-template>
           </a>
-        </div>
-      </div>
-    </div>
+        
   </div>
   <ul class="hidden md:visible md:flex flex-row justify-center sm:justify-around">
     <li class="text-lg text-center px-4 lg:text-xl hover:text-gray-400 lg:px-10 text-white text-bold  py-10">
@@ -43,25 +54,11 @@
       Report A Claim
     </li>
     <li class="text-lg text-center px-4 lg:text-xl hover:text-gray-400 lg:px-10 text-white text-bold  py-10">
-      <button type="button" (click)="toggleCustomerCareMenu()">
-        Customer Care
-      </button>
-      <div class="fixed z-30 top-22 right-64 transition ease-in-out pr-12" *ngIf="customerCareMenuOpen">
-        <div class="rounded-lg  shadow-lg ring-1 ring-black ring-opacity-5 bg-white divide-y-2 divide-gray-50">
-          <div class="py-4 px-5 flex flex-col justify-center items-center">
-            <div class="grid gap-4">
-              <div class="text-center text-lg font-bold text-black hover:opacity-60">
-                <a>
-                  Account Settings
-                </a>
-              </div>
-              <div class="text-center text-lg font-bold text-black hover:opacity-60">
-                <a  routerLink="/preferences">
-                  Customer Preferences
-                </a>
-              </div>
-            </div>
-          </div>
+      <div class="relative">
+        <button (click)="toggleCustomerCareMenu()" class="focus:outline-none"><span *ngIf="!customerCareMenuOpen">&#9656;</span><span *ngIf="customerCareMenuOpen">&#9662;</span>Customer Care</button>
+        <div *ngIf="customerCareMenuOpen" class="absolute right-0 mt-1 w-40 bg-white rounded shadow-lg z-10 hidden sm:flex flex-col">
+          <a href="#" class="px-4 py-2 rounded-sm text-lg font-semibold text-gray-800 hover:bg-gray-500 hover:text-white">Account Settings</a>
+          <a href="#" class="px-4 py-2 rounded-sm text-lg font-semibold text-gray-800 hover:bg-gray-500 hover:text-white" (click)="toggleCustomerCareMenu()" routerLink="/preferences">User Preferences</a>
         </div>
       </div>
     </li>
