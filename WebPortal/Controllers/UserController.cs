@@ -29,12 +29,14 @@ namespace WebPortal.Controllers
         private readonly AppDbContext _authContext;
         private readonly IConfiguration _configuration;
         private readonly IEmailService _emailService;
+        private readonly TwoFactorAuthService _twoFactorAuthService;
 
-        public UserController(AppDbContext appDbContext, IConfiguration configuration, IEmailService emailService)
+        public UserController(AppDbContext appDbContext, IConfiguration configuration, IEmailService emailService, TwoFactorAuthService twoFactorAuthService)
         {
             _authContext = appDbContext;
             _configuration = configuration;
             _emailService = emailService;
+            _twoFactorAuthService = twoFactorAuthService;
         }
 
         [HttpPost("login")]
@@ -49,6 +51,13 @@ namespace WebPortal.Controllers
             if (user == null)
                 return NotFound(new { Message = "User not found!" });
 
+            if (user.IsTwoFactorEnabled)
+            {
+                // Generate a temporary token and store it with the user's username
+                var tempToken = GenerateTemporaryToken(user.Username);
+                return Ok(new { Status = "TwoFactorRequired", TempToken = tempToken });
+            }
+
             user.Token = CreateJwt(user);
             var newAccessToken = user.Token;
 
@@ -59,6 +68,85 @@ namespace WebPortal.Controllers
                 AccessToken = newAccessToken,
                 MessageProcessingHandler = "Login Successful!"
             });
+        }
+
+        [HttpPost("verify-2fa")]
+        public async Task<IActionResult> VerifyTwoFactor([FromBody] TwoFactorVerificationDto twoFactorVerification)
+        {
+            var username = GetUsernameFromTempToken(twoFactorVerification.TempToken);
+            var user = await _authContext.Users.FirstOrDefaultAsync(x => x.Username == username);
+
+            if (user == null || !_twoFactorAuthService.ValidateTwoFactorPIN(user.TwoFactorSecret, twoFactorVerification.TwoFactorCode))
+            {
+                return BadRequest("Invalid 2FA code or user.");
+            }
+
+            user.Token = CreateJwt(user);
+            await _authContext.SaveChangesAsync();
+
+            return Ok(new { AccessToken = user.Token, Message = "2FA Verification Successful!" });
+        }
+
+        private string GenerateTemporaryToken(string username)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]); // Use a secret key from configuration
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+            new Claim("username", username)
+                }),
+                Expires = DateTime.UtcNow.AddMinutes(15), // Token expires in 15 minutes
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+        }
+
+        private string GetUsernameFromTempToken(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+            tokenHandler.ValidateToken(token, new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ClockSkew = TimeSpan.Zero
+            }, out SecurityToken validatedToken);
+
+            var jwtToken = (JwtSecurityToken)validatedToken;
+            var usernameClaim = jwtToken.Claims.FirstOrDefault(x => x.Type == "Username");
+
+            if (usernameClaim != null)
+            {
+                return usernameClaim.Value;
+            }
+
+            throw new SecurityTokenException("Invalid token");
+        }
+
+        [HttpPost("enable-2fa")]
+        [Authorize]
+        public async Task<IActionResult> EnableTwoFactorAuthentication()
+        {
+            var username = User.Identity.Name;
+            var user = await _authContext.Users.FirstOrDefaultAsync(u => u.Username == username);
+
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            // Generate and store 2FA secret key
+            user.TwoFactorSecret = _twoFactorAuthService.GenerateSetupCode(user.Email);
+            user.IsTwoFactorEnabled = true;
+
+            await _authContext.SaveChangesAsync();
+
+            return Ok("2FA enabled successfully.");
         }
 
         [HttpPost("register")]
@@ -233,6 +321,7 @@ namespace WebPortal.Controllers
             var token = jwtTokenHandler.CreateToken(tokenDescriptor);
             return jwtTokenHandler.WriteToken(token);
         }
+
     }
 }
 

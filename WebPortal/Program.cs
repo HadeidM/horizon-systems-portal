@@ -15,6 +15,7 @@ builder.Services.AddDbContext<AppDbContext>(option =>
     option.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnStr"));
 });
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<TwoFactorAuthService>();
 
 builder.Services.AddControllers();
 builder.Services.AddAuthentication(x =>

@@ -39,6 +39,10 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "GoogleAuthenticator": {
+              "target": "Package",
+              "version": "[3.1.1, )"
+            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[6.0.23, )"
@@ -60,6 +64,10 @@
             "NETCore.MailKit": {
               "target": "Package",
               "version": "[2.1.0, )"
+            },
+            "Otp.NET": {
+              "target": "Package",
+              "version": "[1.3.0, )"
             }
           },
           "imports": [

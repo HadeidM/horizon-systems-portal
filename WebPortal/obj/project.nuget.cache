@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "DWSVuZxZaz6+/UfL0fYulNQEz4G+GaT1LtIeD76xsiFVfr5oK2RbdbdQGZNVWTabWv08JKU1XN6hzmJoa+GbnQ==",
+  "dgSpecHash": "PKnz7yb1ZH1tqTmEp+ODH8AQtDszR7EfqWUUaFmM4qUCBQbU/e2bRgs2QG+NsDwko3hhW8Npry94/tYxm+Z45w==",
   "success": true,
   "projectFilePath": "/Users/zhiruiguo/UW-Madison/23fall/CS639/639/WebPortal/WebPortal/WebPortal.csproj",
   "expectedPackageFiles": [
     "/Users/zhiruiguo/.nuget/packages/azure.core/1.25.0/azure.core.1.25.0.nupkg.sha512",
     "/Users/zhiruiguo/.nuget/packages/azure.identity/1.7.0/azure.identity.1.7.0.nupkg.sha512",
+    "/Users/zhiruiguo/.nuget/packages/googleauthenticator/3.1.1/googleauthenticator.3.1.1.nupkg.sha512",
     "/Users/zhiruiguo/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/Users/zhiruiguo/.nuget/packages/mailkit/3.2.0/mailkit.3.2.0.nupkg.sha512",
     "/Users/zhiruiguo/.nuget/packages/microsoft.aspnetcore.authentication.jwtbearer/6.0.23/microsoft.aspnetcore.authentication.jwtbearer.6.0.23.nupkg.sha512",
@@ -45,7 +46,9 @@
     "/Users/zhiruiguo/.nuget/packages/mimekit/3.2.0/mimekit.3.2.0.nupkg.sha512",
     "/Users/zhiruiguo/.nuget/packages/mono.texttemplating/2.2.1/mono.texttemplating.2.2.1.nupkg.sha512",
     "/Users/zhiruiguo/.nuget/packages/netcore.mailkit/2.1.0/netcore.mailkit.2.1.0.nupkg.sha512",
+    "/Users/zhiruiguo/.nuget/packages/otp.net/1.3.0/otp.net.1.3.0.nupkg.sha512",
     "/Users/zhiruiguo/.nuget/packages/portable.bouncycastle/1.9.0/portable.bouncycastle.1.9.0.nupkg.sha512",
+    "/Users/zhiruiguo/.nuget/packages/qrcoder/1.4.3/qrcoder.1.4.3.nupkg.sha512",
     "/Users/zhiruiguo/.nuget/packages/system.codedom/4.4.0/system.codedom.4.4.0.nupkg.sha512",
     "/Users/zhiruiguo/.nuget/packages/system.configuration.configurationmanager/6.0.1/system.configuration.configurationmanager.6.0.1.nupkg.sha512",
     "/Users/zhiruiguo/.nuget/packages/system.diagnostics.diagnosticsource/6.0.0/system.diagnostics.diagnosticsource.6.0.0.nupkg.sha512",

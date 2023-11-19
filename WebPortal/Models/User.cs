@@ -17,6 +17,8 @@ namespace WebPortal.Models
         public string Token { get; set; }
         public string ResetPasswordToken { get; set; }
         public DateTime ResetPasswordExpiry { get; set; }
-	}
+        public string TwoFactorSecret { get; set; } // used by 2FA app to generate TOTPs
+        public bool IsTwoFactorEnabled { get; set; }
+    }
 }
 
