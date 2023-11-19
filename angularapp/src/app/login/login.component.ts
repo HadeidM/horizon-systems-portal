@@ -50,7 +50,11 @@ export class LoginComponent {
       role: "string",
       "token": "string",
       "resetPasswordToken": "string",
-      "resetPasswordExpiry": "2023-11-12T20:14:09.880Z" };
+      "resetPasswordExpiry": "2023-11-12T20:14:09.880Z" ,
+      logourl: "",
+    "mfaoption":"email",
+    "primarycolor": "1",
+    "secondarycolor": "1"}
     const config = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',

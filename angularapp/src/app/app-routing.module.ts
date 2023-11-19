@@ -18,7 +18,7 @@ const routes: Routes = [
   {path: '', redirectTo:"/home",pathMatch:'full'},
   { path: 'weather', component: WeatherComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'preferences', component: PreferencesComponent },
+  { path: 'preferences', component: PreferencesComponent, canActivate: [AuthGuard]},
   { path: 'registration-success', component: RegistrationSuccessComponent },
   { path: 'reset', component:ResetComponent},
   { path: 'password-reset', component:ResetPasswordComponent},
