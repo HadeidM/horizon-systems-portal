@@ -16,6 +16,10 @@ using System.Text;
 using webapi.Helpers;
 using webapi.Models.Dto;
 using webapi.UtilityService;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
+using Twilio.Types;
+using OtpNet;
 
 namespace webapi.Controllers
 {
@@ -96,6 +100,115 @@ namespace webapi.Controllers
         {
             return await _authContext.Users.AnyAsync(x => x.Email == email);
         }
+
+
+        [HttpPost("send_otp/{email}")]
+        public async Task<IActionResult> SendOTPEmail(string email)
+        {
+            var user = await _authContext.Users.FirstOrDefaultAsync(a => a.Email == email);
+            if (user is null)
+            {
+                return NotFound(new
+                {
+                    StatusCode = 404,
+                    Message = "Email does not exist."
+                });
+            }
+            var tokenBytes = RandomNumberGenerator.GetBytes(64);
+            var emailToken = Convert.ToBase64String(tokenBytes);
+            user.ResetPasswordToken = emailToken;
+            user.ResetPasswordExpiry = DateTime.Now.AddMinutes(10); // user password link get expired in 10 min
+            string from = _configuration["EmailSettings:From"];
+
+            //  Generate code using otp.net..
+            var secretKey = KeyGeneration.GenerateRandomKey(20);
+            String secretKeyBase32 = Base32Encoding.ToString(secretKey);
+            user.MFAToken = secretKeyBase32;
+
+            var totp = new Totp(secretKey);
+            var otp = totp.ComputeTotp();
+
+            var emailModel = new EmailModel(email, "Verification Code", EmailOTPBody.EmailStringBody(otp, emailToken));
+            _emailService.SendOTPEmail(emailModel);
+            _authContext.Entry(user).State = EntityState.Modified; // update database with new reset password token and the expiry
+            await _authContext.SaveChangesAsync();
+            return Ok(new
+            {
+                StatusCode = 200,
+                Message = "Email Sent!"
+            });
+        }
+
+        [HttpPost("send_otp_phone/{phone}")]
+        public async Task<IActionResult> SendOTPPhone(string phone)
+        {
+            var user = await _authContext.Users.FirstOrDefaultAsync(a => a.Phone == phone);
+            if (user is null)
+            {
+                return NotFound(new
+                {
+                    StatusCode = 404,
+                    Message = "Phone Number not found in account or it does not exist."
+                });
+            }
+            //  Generate code using otp.net..
+            var secretKey = KeyGeneration.GenerateRandomKey(20);
+            var secretKeyBase32 = Base32Encoding.ToString(secretKey);
+            user.MFAToken = secretKeyBase32;
+            var totp = new Totp(secretKey);
+            var otp = totp.ComputeTotp();
+
+            // replace with valid account SID and Auth Token or use ENV variables
+            var accountSid = "<YOUR ACCOUNT SID>"; 
+            var authToken = "<YOUR AUTH TOKEN>";
+            
+            // send message using twilio
+            TwilioClient.Init(accountSid, authToken);
+            var messageOptions = new CreateMessageOptions(
+              new PhoneNumber(phone));
+            messageOptions.From = new PhoneNumber("<YOUR VALID TWILIO NUMBER>");
+            messageOptions.Body = "Secure Login: Your Horizon Systems Portal MFA code is " + otp;
+            var message = MessageResource.Create(messageOptions);
+
+            _authContext.Entry(user).State = EntityState.Modified; // update database with new reset password token and the expiry
+            await _authContext.SaveChangesAsync();
+            return Ok(new
+            {
+                StatusCode = 200,
+                Message = "Code Sent to Phone!"
+            });
+        }
+
+        [HttpPost("verify_mfa")]
+        public async Task<IActionResult> VerifyMFA(MFADto mfaDto)
+        {
+            var user = await _authContext.Users.AsNoTracking().FirstOrDefaultAsync(a => mfaDto.Email == a.Email || mfaDto.Phone == a.Phone);
+            if (user is null)
+                return NotFound(new
+                {
+                    StatusCode = 404,
+                    Message = "No user found with this email or phone!"
+                });
+            // Generate code using otp.net and saved secret key from database
+            byte[] secretKey = Base32Encoding.ToBytes(user.MFAToken);
+            var totp = new Totp(secretKey);
+            var otp = totp.ComputeTotp();
+            bool isCorrect = totp.VerifyTotp(mfaDto.MFAToken, out long timeStepMatched, new VerificationWindow(2, 2));
+            if (!isCorrect)
+                return NotFound(new
+                {
+                    StatusCode = 400,
+                    Message = "Invalid Code!"
+                });
+            _authContext.Entry(user).State = EntityState.Modified;
+            await _authContext.SaveChangesAsync();
+            return Ok(new
+            {
+                StatusCode = 200,
+                Message = "OTP Verified Successfully!"
+            });
+        }
+
 
         [HttpPost("send_reset_email/{email}")]
         public async Task<IActionResult> SendEmail(string email)
