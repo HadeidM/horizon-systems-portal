@@ -11,7 +11,6 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { MultiFactorAuthComponent } from './multi-factor-auth/multi-factor-auth.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { WeatherComponent } from './weather/weather.component';
 import { RegisterComponent } from './register/register.component';
 import { PreferencesComponent } from './preferences/preferences.component';
 import { RegistrationSuccessComponent } from './registration-success/registration-success.component';
@@ -27,7 +26,6 @@ import { ResetComponent } from './reset/reset.component';
     HomeComponent,
     LoginComponent,
     MultiFactorAuthComponent,
-    WeatherComponent,
     RegisterComponent,
     PreferencesComponent,
     RegistrationSuccessComponent,
