@@ -167,6 +167,8 @@ namespace WebPortal.Controllers
                 return BadRequest(new { Message = "An account with this email address already exists." });
             }
 
+            userObj.Password = PasswordHasher.HashPassword(userObj.Password); // hash password
+
             userObj.Role = "User";
             userObj.Token = "";
 
