@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 using webapi.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,7 @@ using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
 using OtpNet;
+using MimeKit.Encodings;
 
 namespace webapi.Controllers
 {
@@ -30,12 +32,14 @@ namespace webapi.Controllers
         private readonly AppDbContext _authContext;
         private readonly IConfiguration _configuration;
         private readonly IEmailService _emailService;
+        private IMemoryCache _cache;
 
-        public UserController(AppDbContext appDbContext, IConfiguration configuration, IEmailService emailService)
+        public UserController(AppDbContext appDbContext, IConfiguration configuration, IEmailService emailService, IMemoryCache memoryCache)
         {
             _authContext = appDbContext;
             _configuration = configuration;
             _emailService = emailService;
+            _cache = memoryCache;
         }
 
         [HttpPost("login")]
@@ -114,6 +118,7 @@ namespace webapi.Controllers
                     Message = "Email does not exist."
                 });
             }
+
             var tokenBytes = RandomNumberGenerator.GetBytes(64);
             var emailToken = Convert.ToBase64String(tokenBytes);
             user.ResetPasswordToken = emailToken;
@@ -122,8 +127,8 @@ namespace webapi.Controllers
 
             //  Generate code using otp.net..
             var secretKey = KeyGeneration.GenerateRandomKey(20);
-            String secretKeyBase32 = Base32Encoding.ToString(secretKey);
-            user.MFAToken = secretKeyBase32;
+            _cache.Set(user.ID, secretKey, TimeSpan.FromMinutes(5)); 
+            user.MFAToken = "NoTokenForYOU";
 
             var totp = new Totp(secretKey);
             var otp = totp.ComputeTotp();
@@ -153,20 +158,17 @@ namespace webapi.Controllers
             }
             //  Generate code using otp.net..
             var secretKey = KeyGeneration.GenerateRandomKey(20);
-            var secretKeyBase32 = Base32Encoding.ToString(secretKey);
-            user.MFAToken = secretKeyBase32;
+            _cache.Set(user.ID, secretKey, TimeSpan.FromMinutes(5));
             var totp = new Totp(secretKey);
             var otp = totp.ComputeTotp();
-
-            // replace with valid account SID and Auth Token or use ENV variables
-            var accountSid = "<YOUR ACCOUNT SID>"; 
-            var authToken = "<YOUR AUTH TOKEN>";
+            var accountSid = "SID"; 
+            var authToken = "AUTH TOKEN";
             
             // send message using twilio
             TwilioClient.Init(accountSid, authToken);
             var messageOptions = new CreateMessageOptions(
               new PhoneNumber(phone));
-            messageOptions.From = new PhoneNumber("<YOUR VALID TWILIO NUMBER>");
+            messageOptions.From = new PhoneNumber("Number");
             messageOptions.Body = "Secure Login: Your Horizon Systems Portal MFA code is " + otp;
             var message = MessageResource.Create(messageOptions);
 
@@ -182,15 +184,28 @@ namespace webapi.Controllers
         [HttpPost("verify_mfa")]
         public async Task<IActionResult> VerifyMFA(MFADto mfaDto)
         {
-            var user = await _authContext.Users.AsNoTracking().FirstOrDefaultAsync(a => mfaDto.Email == a.Email || mfaDto.Phone == a.Phone);
+            byte[] data = Convert.FromBase64String(mfaDto.Username);
+            string decodedString = Encoding.UTF8.GetString(data);
+            var user = await _authContext.Users.AsNoTracking().FirstOrDefaultAsync(a => decodedString == a.Username);
             if (user is null)
                 return NotFound(new
                 {
                     StatusCode = 404,
-                    Message = "No user found with this email or phone!"
+                    Message = "No user found with this username!"
                 });
             // Generate code using otp.net and saved secret key from database
-            byte[] secretKey = Base32Encoding.ToBytes(user.MFAToken);
+           
+            if (!_cache.TryGetValue(user.ID, out byte[] secretKey))
+            {
+                // Secret key not found in cache
+                return NotFound(new
+                {
+                    StatusCode = 400,
+                    Message = "Your time to enter the code expired or secret key not found in cache!"
+                });
+            }
+
+            // Generate the OTP
             var totp = new Totp(secretKey);
             var otp = totp.ComputeTotp();
             bool isCorrect = totp.VerifyTotp(mfaDto.MFAToken, out long timeStepMatched, new VerificationWindow(2, 2));
@@ -200,6 +215,7 @@ namespace webapi.Controllers
                     StatusCode = 400,
                     Message = "Invalid Code!"
                 });
+            _cache.Remove(user.ID);
             _authContext.Entry(user).State = EntityState.Modified;
             await _authContext.SaveChangesAsync();
             return Ok(new
