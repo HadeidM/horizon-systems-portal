@@ -340,11 +340,18 @@ namespace webapi.Controllers
         }
 
         [HttpGet("profile")]
-        [Authorize]
-        public async Task<IActionResult> GetProfile()
+        // [Authorize]
+        public async Task<IActionResult> GetProfile([FromHeader(Name = "Username")] string base64Username)
         {
+            if (string.IsNullOrEmpty(base64Username))
+            {
+                return BadRequest(new { Message = "Username header is missing!" });
+            }
+
+            var username = Encoding.UTF8.GetString(Convert.FromBase64String(base64Username));
+
             // Assume that the username is the unique identifier for the user and is stored in the claim after authentication
-            var username = User.Identity.Name;
+            // var username = User.Identity.Name;
             var user = await _authContext.Users
                 .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Username == username);
@@ -366,10 +373,17 @@ namespace webapi.Controllers
         }
 
         [HttpPut("profile")]
-        [Authorize] // Ensure only authenticated users can update their profile
-        public async Task<IActionResult> UpdateProfile([FromBody] UpdateUserProfileDto userProfileDto)
+        // [Authorize]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateUserProfileDto userProfileDto, [FromHeader(Name = "Username")] string base64Username)
         {
-            var username = User.Identity.Name; // should implement Authorization first
+            if (string.IsNullOrEmpty(base64Username))
+            {
+                return BadRequest(new { Message = "Username header is missing!" });
+            }
+
+            var username = Encoding.UTF8.GetString(Convert.FromBase64String(base64Username));
+
+            // var username = User.Identity.Name; // should implement Authorization first
             var user = await _authContext.Users
                 .FirstOrDefaultAsync(u => u.Username == username);
 
