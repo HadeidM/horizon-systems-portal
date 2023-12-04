@@ -1,0 +1,53 @@
+<div class="login-container">
+    <h2><b>User Profile</b></h2>
+
+    <div class="profile-item">
+      <span>ID: </span> {{ user.id }}
+    </div>
+
+    <div class="profile-item">
+        <span>Email: </span>
+        <span *ngIf="!isEditing">{{ user.email }}</span>
+        <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+          <input *ngIf="isEditing" [(ngModel)]="editedUser.email" style="display: block;">
+        </div>
+    </div>
+
+    <div class="profile-item">
+        <span>First Name: </span>
+        <span *ngIf="!isEditing">{{ user.firstName }}</span>
+        <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+          <input *ngIf="isEditing" [(ngModel)]="editedUser.firstName" style="display: block;">
+        </div>
+    </div>
+
+    <div class="profile-item">
+        <span>Last Name: </span>
+        <span *ngIf="!isEditing">{{ user.lastName }}</span>
+        <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+          <input *ngIf="isEditing" [(ngModel)]="editedUser.lastName" style="display: block;">
+        </div>
+    </div>
+
+    <div class="profile-item">
+        <span>Username: </span>
+        <span *ngIf="!isEditing">{{ user.username }}</span>
+        <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+          <input *ngIf="isEditing" [(ngModel)]="editedUser.username" style="display: block;">
+        </div>
+    </div>
+
+    <div class="profile-item">
+        <span>Role: </span>
+        <span *ngIf="!isEditing">{{ user.role }}</span>
+        <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+          <input *ngIf="isEditing" [(ngModel)]="editedUser.role" style="display: block;">
+        </div>
+    </div>
+
+  
+    <button  class="login-button" *ngIf="!isEditing" (click)="enableEditing()">Edit</button>
+
+    <button *ngIf="isEditing"  class="login-button" (click)="saveData()">Save</button>
+  </div>
+  

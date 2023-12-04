@@ -16,6 +16,7 @@ import { PreferencesComponent } from './preferences/preferences.component';
 import { RegistrationSuccessComponent } from './registration-success/registration-success.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ResetComponent } from './reset/reset.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { ResetComponent } from './reset/reset.component';
     PreferencesComponent,
     RegistrationSuccessComponent,
     ResetPasswordComponent,
-    ResetComponent
+    ResetComponent,
+    UserProfileComponent
   ],
   imports: [
     BrowserModule,

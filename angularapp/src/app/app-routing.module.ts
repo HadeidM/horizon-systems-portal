@@ -9,6 +9,7 @@ import { RegistrationSuccessComponent } from './registration-success/registratio
 import { AuthGuard } from './auth.guard';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ResetComponent } from './reset/reset.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -20,6 +21,8 @@ const routes: Routes = [
   { path: 'registration-success', component: RegistrationSuccessComponent },
   { path: 'reset', component:ResetComponent},
   { path: 'password-reset', component:ResetPasswordComponent},
+  {path: 'user-profile', component: UserProfileComponent}
+
   
 ];
 
