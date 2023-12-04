@@ -3,6 +3,7 @@ import { ColorService } from '../color.service';
 import { Subscription } from 'rxjs';
 import { FormControl, FormGroup } from '@angular/forms';
 import { LogoService } from '../logo.service';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-preferences',
@@ -18,14 +19,14 @@ export class PreferencesComponent {
   color2!:Input;
   subscription1!: Subscription;
   subscription2!: Subscription;
-  MFAEnabled:boolean = false;
+  MFAEnabled:boolean = this.authServ.getMFAOption() == "email" || "phone" ? true : false;
   MFAOption:string = '';
   
-  constructor (private colorServ:ColorService, private logoserv:LogoService) {}
+  constructor (private colorServ:ColorService, private logoserv:LogoService, private authServ:AuthService) {}
 
  
   MFAOptForm = new FormGroup({
-    option: new FormControl('Email'),
+    option: new FormControl(this.authServ.getMFAOption()),
   });
 
 

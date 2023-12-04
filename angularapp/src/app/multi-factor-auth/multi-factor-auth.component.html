@@ -1,6 +1,7 @@
 <div class="login-container">
   <h2 class="text-lg font-bold">Multi-Factor Authentication Required</h2>
-  <p class="text-md">Enter the code from your Code Generator or 3rd party app below:</p>
+  <p class="text-md" [ngClass]="{'hidden':mfaWrong}">Enter the code which was just sent to your preferred MFA option:</p>
+  <p class="text-md" [ngClass]="{'hidden':!mfaWrong}">Wrong code! Please enter the new code that was just sent:</p>
   <div class="form-group">
     <input type="text" id="code" name="code" [(ngModel)]="usrCode" required placeholder="Enter Code">
   </div>

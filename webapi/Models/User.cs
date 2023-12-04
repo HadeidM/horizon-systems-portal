@@ -21,6 +21,5 @@ namespace webapi.Models
         public string SecondaryColor { get; set; }
         public string LogoUrl { get; set; }
         public string MFAOption { get; set; }
-        public string MFAToken { get; set; }
     }
 }

@@ -65,6 +65,62 @@ namespace webapi.Controllers
                 MessageProcessingHandler = "Login Successful!"
             });
         }
+        [HttpGet("get_email/{username}")]
+        public async Task<IActionResult> GetEmail(string username)
+        {
+            var user = await _authContext.Users.FirstOrDefaultAsync(a => a.Username == username);
+            if (user is null)
+            {
+                return NotFound(new
+                {
+                    StatusCode = 404,
+                    Message = "Username does not exist."
+                });
+            }
+            return Ok(new
+            {
+                StatusCode = 200,
+                Message = user.Email
+            });
+        }
+        [HttpGet("get_phone/{username}")]
+        public async Task<IActionResult> GetPhone(string username)
+        {
+            var user = await _authContext.Users.FirstOrDefaultAsync(a => a.Username == username);
+            if (user is null)
+            {
+                return NotFound(new
+                {
+                    StatusCode = 404,
+                    Message = "Username does not exist."
+                });
+            }
+            return Ok(new
+            {
+                StatusCode = 200,
+                Message = user.Phone
+            });
+        }
+
+        [HttpGet("get_mfaOpt/{username}")]
+        public async Task<IActionResult> GetMFAOption(string username)
+        {
+            var user = await _authContext.Users.FirstOrDefaultAsync(a => a.Username == username);
+            if (user is null)
+            {
+                return NotFound(new
+                {
+                    StatusCode = 404,
+                    Message = "Username does not exist."
+                });
+            }
+            return Ok(new
+            {
+                StatusCode = 200,
+                Message = user.MFAOption
+            });
+        }
+
 
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser([FromBody] User userObj)
@@ -128,7 +184,6 @@ namespace webapi.Controllers
             //  Generate code using otp.net..
             var secretKey = KeyGeneration.GenerateRandomKey(20);
             _cache.Set(user.ID, secretKey, TimeSpan.FromMinutes(5)); 
-            user.MFAToken = "NoTokenForYOU";
 
             var totp = new Totp(secretKey);
             var otp = totp.ComputeTotp();
@@ -162,13 +217,13 @@ namespace webapi.Controllers
             var totp = new Totp(secretKey);
             var otp = totp.ComputeTotp();
             var accountSid = "SID"; 
-            var authToken = "AUTH TOKEN";
+            var authToken = "TOKEN";
             
             // send message using twilio
             TwilioClient.Init(accountSid, authToken);
             var messageOptions = new CreateMessageOptions(
               new PhoneNumber(phone));
-            messageOptions.From = new PhoneNumber("Number");
+            messageOptions.From = new PhoneNumber("NUMBER");
             messageOptions.Body = "Secure Login: Your Horizon Systems Portal MFA code is " + otp;
             var message = MessageResource.Create(messageOptions);
 

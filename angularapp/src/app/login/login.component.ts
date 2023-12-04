@@ -21,6 +21,7 @@ export class LoginComponent {
   multiFactorSet: boolean | undefined;
   loginResp?: LoginResp;
   private authUrl = 'https://localhost:7235/api/User/login';
+
   fb = inject(FormBuilder);
   loginForm !: FormGroup;
   errorLogin: boolean = false;
@@ -66,7 +67,14 @@ export class LoginComponent {
         next: (res) => {
           console.log(res)
           this.authServ.login(this.loginForm.value.username);
-          this.router.navigate(['/home']) // navigate to home on successful login
+          let status = this.authServ.getMFAStatus();
+          console.log("status: " +status)
+          if (status) {
+            this.router.navigate(['/mfa'])
+          }
+          else {
+            this.router.navigate(['/home'])
+           } // navigate to home on successful login
         }, error: (err) => {
           this.errorLogin = true;
           console.log(err)
