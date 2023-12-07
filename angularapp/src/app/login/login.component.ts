@@ -22,12 +22,14 @@ export class LoginComponent {
   loginResp?: LoginResp;
   private authUrl = 'https://localhost:7235/api/User/login';
 
+  // create the login form
   fb = inject(FormBuilder);
   loginForm !: FormGroup;
   errorLogin: boolean = false;
+  // create user login events
   @Output() userLoggedIn: EventEmitter<any> = new EventEmitter<any>();
 
-  
+  // initialize the form
   constructor(private router: Router, private nvComponent: NavbarComponent, private http: HttpClient, private authServ:AuthService) {
     this.multiFactorSet = true;
     this.loginForm = this.fb.group({
@@ -36,9 +38,10 @@ export class LoginComponent {
     });
   }
 
-
+  // login function
   login(){
     let lr: LoginResp;
+    // login data
     const data = {  
       id: 0,
       firstName: "string",
@@ -56,19 +59,23 @@ export class LoginComponent {
     "mfaoption":"email",
     "primarycolor": "1",
     "secondarycolor": "1"}
+    // configure HTTP headers
     const config = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
         "Access-Control-Allow-Origin": "*"
       })
     };
+    // make a post request
     this.http.post<LoginResp>(this.authUrl, JSON.stringify(data), config)
       .subscribe({
         next: (res) => {
+          // login successfully
           console.log(res)
           this.authServ.login(this.loginForm.value.username);
           let status = this.authServ.getMFAStatus();
           console.log("status: " +status)
+          // redirect based on status
           if (status) {
             this.router.navigate(['/mfa'])
           }
@@ -83,9 +90,12 @@ export class LoginComponent {
     
   }
 
+  // get username of the logged in user
   getUsername() {
     return this.userLoggedIn;
   }
+
+  // navigate to the SSO page
   navigateToSSOPage() {
     if (this.multiFactorSet) {
       this.router.navigate(['/mfa']);
