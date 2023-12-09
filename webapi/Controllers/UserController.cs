@@ -216,14 +216,15 @@ namespace webapi.Controllers
             _cache.Set(user.ID, secretKey, TimeSpan.FromMinutes(5));
             var totp = new Totp(secretKey);
             var otp = totp.ComputeTotp();
-            var accountSid = "AC98f435e976391638d19520cc762b4c12";
-            var authToken = "e9bc48117061342bd50a794045ccea3b";
+            // replace with your own Twilio details!
+            var accountSid = "SID";
+            var authToken = "authToken";
 
             // send message using twilio
             TwilioClient.Init(accountSid, authToken);
             var messageOptions = new CreateMessageOptions(
               new PhoneNumber(phone));
-            messageOptions.From = new PhoneNumber("+18556193697");
+            messageOptions.From = new PhoneNumber("<twilio number>");
             messageOptions.Body = "Secure Login: Your Horizon Systems Portal MFA code is " + otp;
             var message = MessageResource.Create(messageOptions);
 
