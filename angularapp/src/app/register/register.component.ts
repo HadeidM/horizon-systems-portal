@@ -12,6 +12,7 @@ export class RegisterComponent {
   fb = inject(FormBuilder);
   success = false;
 
+  // initialize the form
   constructor(private formBuilder: FormBuilder, private router: Router, private userService: RegisterService) {
     this.registerForm = this.fb.group({
       firstName: ['', Validators.required],
@@ -23,13 +24,15 @@ export class RegisterComponent {
   }
 
 /*  get f() { return this.registerForm.controls; }*/
-
+// handle form submission
   onSubmit() {
     this.submitted = true;
     console.log(this.registerForm.value)
+    // make a registration request 
     this.userService.register(this.registerForm.value)
       .subscribe({
           next: (res) => {
+            // handle successful registration and navigate to the registration success page
             console.log('Registration successful');
             this.router.navigate(['/registration-success']);
         }, error: (err) => {
