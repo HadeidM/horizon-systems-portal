@@ -183,7 +183,7 @@ namespace webapi.Controllers
 
             //  Generate code using otp.net..
             var secretKey = KeyGeneration.GenerateRandomKey(20);
-            _cache.Set(user.ID, secretKey, TimeSpan.FromMinutes(5)); 
+            _cache.Set(user.ID, secretKey, TimeSpan.FromMinutes(5));
 
             var totp = new Totp(secretKey);
             var otp = totp.ComputeTotp();
@@ -216,14 +216,14 @@ namespace webapi.Controllers
             _cache.Set(user.ID, secretKey, TimeSpan.FromMinutes(5));
             var totp = new Totp(secretKey);
             var otp = totp.ComputeTotp();
-            var accountSid = "SID"; 
-            var authToken = "TOKEN";
-            
+            var accountSid = "AC98f435e976391638d19520cc762b4c12";
+            var authToken = "e9bc48117061342bd50a794045ccea3b";
+
             // send message using twilio
             TwilioClient.Init(accountSid, authToken);
             var messageOptions = new CreateMessageOptions(
               new PhoneNumber(phone));
-            messageOptions.From = new PhoneNumber("NUMBER");
+            messageOptions.From = new PhoneNumber("+18556193697");
             messageOptions.Body = "Secure Login: Your Horizon Systems Portal MFA code is " + otp;
             var message = MessageResource.Create(messageOptions);
 
@@ -249,7 +249,7 @@ namespace webapi.Controllers
                     Message = "No user found with this username!"
                 });
             // Generate code using otp.net and saved secret key from database
-           
+
             if (!_cache.TryGetValue(user.ID, out byte[] secretKey))
             {
                 // Secret key not found in cache
@@ -430,76 +430,81 @@ namespace webapi.Controllers
         }
 
 
-[HttpGet("preferences")]
-[Authorize]
-public async Task<IActionResult> GetPreferences([FromBody] PreferencesRequestDto preferencesRequestDto)
-{
-    var user = await _authContext.Users
-        .AsNoTracking()
-        .FirstOrDefaultAsync(u => u.Username == preferencesRequestDto.Username);
+        [HttpPost("preferences")]
+        public async Task<IActionResult> GetPreferences([FromBody] UserPreferencesDto preferencesDto)
+        {
+            var user = await _authContext.Users.AsNoTracking().FirstOrDefaultAsync(a => preferencesDto.Email == a.Email);
 
-    if (user == null)
-    {
-        return NotFound(new 
-        { 
-            StatusCode = 404,
-            Message = "User not found!" 
-        });
-    }
+            if (user == null)
+            {
+                return NotFound(new
+                {
+                    StatusCode = 404,
+                    Message = "User not found!"
+                });
+            }
 
-    var preferences = new UserPreferencesDto
-    {
-        PrimaryColor = user.PrimaryColor,
-        SecondaryColor = user.SecondaryColor,
-        LogoUrl = user.LogoUrl,
-        MFAOption = user.MFAOption
-    };
+            var preferences = new UserPreferencesDto
+            {
+                PrimaryColor = user.PrimaryColor,
+                SecondaryColor = user.SecondaryColor,
+                LogoUrl = user.LogoUrl,
+                MFAOption = user.MFAOption
+            };
 
-    return Ok(preferences);
-}
+            return Ok(preferences);
+        }
 
 
-[HttpPut("preferences")]
-[Authorize]
-public async Task<IActionResult> UpdatePreferences([FromBody] UserPreferencesDto preferencesDto)
-{
-    var user = await _authContext.Users
-        .FirstOrDefaultAsync(u => u.Username == preferencesDto.Username);
+        [HttpPut("preferences")]
+        public async Task<IActionResult> UpdatePreferences([FromBody] UserPreferencesDto preferencesDto)
+        {
+            var user = await _authContext.Users.AsNoTracking().FirstOrDefaultAsync(a => preferencesDto.Email == a.Email);
 
-    if (user == null)
-    {
-        return NotFound(new 
-        { 
-            StatusCode = 404,
-            Message = "User not found!" 
-        });
-    }
+            if (user == null)
+            {
+                return NotFound(new
+                {
+                    StatusCode = 404,
+                    Message = "User not found!"
+                });
+            }
+            if (!(preferencesDto.PrimaryColor == ""))
+            {
+                user.PrimaryColor = preferencesDto.PrimaryColor;
+            }
+            if (!(preferencesDto.SecondaryColor == ""))
+            {
+                user.SecondaryColor = preferencesDto.SecondaryColor;
+            }
+            if (!(preferencesDto.LogoUrl == ""))
+            {
+                user.LogoUrl = preferencesDto.LogoUrl;
+            }
+            if (!(preferencesDto.MFAOption == ""))
+            {
+                user.MFAOption = preferencesDto.MFAOption;
+            }
+            _authContext.Entry(user).State = EntityState.Modified;
+            await _authContext.SaveChangesAsync();
 
-    user.PrimaryColor = preferencesDto.PrimaryColor;
-    user.SecondaryColor = preferencesDto.SecondaryColor;
-    user.LogoUrl = preferencesDto.LogoUrl;
-    user.MFAOption = preferencesDto.MFAOption;
+            var updatedPreferences = new UserPreferencesDto
+            {
+                PrimaryColor = user.PrimaryColor,
+                SecondaryColor = user.SecondaryColor,
+                LogoUrl = user.LogoUrl,
+                MFAOption = user.MFAOption
+            };
 
-    _authContext.Entry(user).State = EntityState.Modified;
-    await _authContext.SaveChangesAsync();
+            return Ok(new
+            {
+                StatusCode = 200,
+                Message = "Preferences updated successfully!",
+                UpdatedPreferences = updatedPreferences
+            });
+        }
 
-    var updatedPreferences = new UserPreferencesDto
-    {
-        PrimaryColor = user.PrimaryColor,
-        SecondaryColor = user.SecondaryColor,
-        LogoUrl = user.LogoUrl,
-        MFAOption = user.MFAOption
-    };
 
-    return Ok(new 
-    { 
-        StatusCode = 200,
-        Message = "Preferences updated successfully!",
-        UpdatedPreferences = updatedPreferences
-    });
-}
-
-    
 
     }
 }

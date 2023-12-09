@@ -1,9 +1,10 @@
 <div class="login-container">
-  <h2 class="text-lg font-bold">Multi-Factor Authentication Required</h2>
+  <h2 class="text-lg font-bold pb-3">Multi-Factor Authentication Required</h2>
   <p class="text-md" [ngClass]="{'hidden':mfaWrong}">Enter the code which was just sent to your preferred MFA option:</p>
-  <p class="text-md" [ngClass]="{'hidden':!mfaWrong}">Wrong code! Please enter the new code that was just sent:</p>
+  <p class="text-md text-red-400" [ngClass]="{'hidden':!mfaWrong}">Wrong code! Please enter the valid code or request new code:</p>
   <div class="form-group">
-    <input type="text" id="code" name="code" [(ngModel)]="usrCode" required placeholder="Enter Code">
+    <input type="text" class="mb-3" id="code" name="code" [(ngModel)]="usrCode" required placeholder="Enter Code">
+    <button (click)="navHome()" class="login-button">Continue</button>
+    <button (click)="reqMfa()" class="login-button" [ngClass]="{'hidden':!mfaWrong}">Request New Code</button>
   </div>
-  <button (click)="navHome()" class="login-button">Continue</button>
 </div>

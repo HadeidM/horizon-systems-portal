@@ -102,7 +102,9 @@ export class AuthService {
   getIsLoggedIn() {
     return this.isLoggedIn;
   }
-
+  getEmail(){
+    return this.email;
+  }
   getUser() {
     return this.username;
   }

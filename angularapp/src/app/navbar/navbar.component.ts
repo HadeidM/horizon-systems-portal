@@ -12,33 +12,6 @@ import { AuthService } from '../auth.service';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  animations: [
-    trigger("openClose", [
-      state(
-        "open",
-        style({
-          opacity: 1,
-          transform: "scale(1)"
-        })
-      ),
-      state(
-        "med",
-        style({
-          opacity: 0.8,
-          transform: "scale(1.2)"
-        })
-      ),
-      state(
-        "closed",
-        style({
-          opacity: 0,
-          transform: "scaleY(0)"
-        })
-      ),
-      transition("open => closed", [animate("0.5s ease-in-out")]),
-      transition("closed => open", [animate("0.5s ease-in-out")])
-    ])
-  ],
 })
 
 export class NavbarComponent {
@@ -119,11 +92,6 @@ export class NavbarComponent {
       this.toggleCustomerCareMenu()
     }
   }
-  
-
-
-
-
 
   getLogoUrl(){
     return this.logoServ.logoUrl;

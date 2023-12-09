@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ColorService } from '../color.service';
+import { LogoService } from '../logo.service';
 
 @Component({
   selector: 'app-multi-factor-auth',
@@ -20,7 +22,7 @@ export class MultiFactorAuthComponent {
       'accept': '*/*'
     })
   };
-  constructor(private router: Router, private authServ:AuthService, private http: HttpClient) {
+  constructor(private router: Router, private logoServ:LogoService, private authServ:AuthService, private colorServ:ColorService, private http: HttpClient) {
     
   }
   async navHome () {
@@ -35,6 +37,9 @@ export class MultiFactorAuthComponent {
           console.log(res)
           if (res.StatusCode == 200) {
             this.authServ.toggleLoggedIn();
+            this.colorServ.getColor1(this.authServ.getEmail());
+            this.colorServ.getColor2(this.authServ.getEmail());
+            this.logoServ.getLogo(this.authServ.getEmail());
             this.router.navigate(['/home']);
             this.verifySuccess = true;
           }
@@ -44,7 +49,14 @@ export class MultiFactorAuthComponent {
         }
       });
   }
+  reqMfa() {
+    this.authServ.sendMFAMessage(this.authServ.getUser());
+    this.mfaWrong = false;
+    this.router.navigate(['/mfa']);
+  }
+
 }
+
 
 type Resp = {
   StatusCode: number;

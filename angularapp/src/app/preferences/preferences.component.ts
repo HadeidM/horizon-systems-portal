@@ -21,8 +21,12 @@ export class PreferencesComponent {
   subscription2!: Subscription;
   MFAEnabled:boolean = this.authServ.getMFAOption() == "email" || "phone" ? true : false;
   MFAOption:string = '';
-  
-  constructor (private colorServ:ColorService, private logoserv:LogoService, private authServ:AuthService) {}
+  private updatePrefUrl = 'https://localhost:7235/api/User/update_preferences/';
+  constructor (private colorServ:ColorService, private logoserv:LogoService, private authServ:AuthService) {
+    this.url = this.logoserv.logoUrl;
+    this.c1val = this.colorServ.color1;
+    this.c2val = this.colorServ.color2;
+  }
 
  
   MFAOptForm = new FormGroup({
@@ -33,6 +37,7 @@ export class PreferencesComponent {
   updateColors(){
     this.colorServ.color1 = this.c1val
     this.colorServ.color2 = this.c2val
+    this.colorServ.updateColors(this.c1val, this.c2val, this.authServ.getEmail()); 
   }
 
   toggleMFA() {
@@ -53,7 +58,8 @@ export class PreferencesComponent {
       reader.onload = (_event) => { 
           this.url = reader.result; 
           this.logoserv.logoUrl = this.url as string
-          console.log(this.url)
+          this.logoserv.updateLogo(this.logoserv.logoUrl, this.authServ.getEmail());
+          console.log("new logo: ", this.url)
       }
       console.log(target.files)
       console.log(target.files[0].name);
